@@ -1,0 +1,212 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0px;
+    background-image: url('https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA1L3NrOTc5MS1pbWFnZS1rd3Z1amE5Ni5qcGc.jpg'); /* Add a background image */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    padding: 0;
+  }
+  
+  form {
+    max-width: 350px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  input[type="number"] {
+    width: 90%;
+    height: 30px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  select {
+    width: 100%;
+    height: 60px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  button[type="button"] {
+    width: 100%;
+    height: 30px;
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: bottom 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2), 2px 4px 0 0 #0f172a ;
+    transition-duration: 200ms ;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+    font-size: 18px;
+
+  }
+  
+  button[type="button"]:hover {
+    background-color: #3e8e41;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4), 6px 6px 0 0 #0f172a;
+    transform : translate(-2px, -2px);
+
+  }
+  
+  button[type="button"].enabled {
+    opacity: 1;
+    cursor: pointer;
+    animation: pulse 2s infinite;
+  }
+  
+  button[type="button"].enabled:hover {
+    animation: pulse 1s infinite;
+  }
+
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  button[type="button"]:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    animation: none;
+  }
+
+  #result {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+  }
+  
+  #convert-btn {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  #convert-btn.enabled {
+    opacity: 1;
+    cursor: pointer;
+  }
+
+  /* Style for incorrect input */
+  #convert-btn.wrong-input {
+    bottom: 10px; 
+    left: calc(50% + 20px * (Math.random() - 0.5));  /* Randomly offset left position */
+    transform: translateX(-50%);
+  }
+
+  /* Style for no input */
+  #convert-btn.no-input {
+    bottom: 10px;
+    left: calc(50% + 40px * (Math.random() - 0.5)); /* Randomly offset left position */
+    transform: translateX(-50%);
+  }
+
+  .move {
+    animation: moveButton 3s linear;
+}
+
+@keyframes moveButton {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(10px); }
+    100% { transform: translateX(0); }
+}
+
+const tempInput = document.getElementById('temp-input');
+const unitSelect = document.getElementById('unit-select');
+const convertBtn = document.getElementById('convert-btn');
+const resultPara = document.getElementById('result');
+
+// Add event listener for convert button click
+convertBtn.addEventListener('click', convertTemperature);
+
+// Add event listener for input field changes to enable/disable button
+tempInput.addEventListener('input', () => {
+  if (tempInput.value !== '') {
+    convertBtn.classList.add('enabled');
+  } else {
+    convertBtn.classList.remove('enabled');
+  }
+});
+
+// Function to convert temperature
+function convertTemperature() {
+  const tempValue = parseFloat(tempInput.value);
+  const unitValue = unitSelect.value;
+
+  // Check if input is a valid number
+  if (isNaN(tempValue)) {
+    animateButton();
+    alert('Please enter a valid temperature value!');
+    return;
+  }
+
+  let convertedTemp = 0;
+  let convertedUnit = '';
+
+  // Perform conversion based on selected unit
+  switch (unitValue) {
+    case 'celsius':
+      if (tempValue < -273.15) {
+        alert('Temperature cannot be lower than absolute zero!');
+        return;
+      }
+      convertedTemp = tempValue * 9 / 5 + 32;
+      convertedUnit = 'Fahrenheit';
+      break;
+    case 'fahrenheit':
+      if (tempValue < -459.67) {
+        alert('Temperature cannot be lower than absolute zero!');
+        return;
+      }
+      convertedTemp = (tempValue - 32) * 5 / 9;
+      convertedUnit = 'Celsius';
+      break;
+    case 'kelvin':
+      if (tempValue < 0) {
+        alert('Temperature cannot be lower than absolute zero!');
+        return;
+      }
+      convertedTemp = tempValue - 273.15;
+      convertedUnit = 'Celsius';
+      break;
+  }
+
+  // Display the converted temperature
+  resultPara.textContent = `The converted temperature is ${convertedTemp.toFixed(2)} ${convertedUnit}`;
+}
+
+// Function to animate button
+function animateButton() {
+  convertBtn.classList.add('animate');
+  setTimeout(() => {
+    convertBtn.classList.remove('animate');
+  }, 1000);
+}
