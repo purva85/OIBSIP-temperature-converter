@@ -18,5 +18,7 @@ The result will be displayed below the input field
 Technical details:
 
 HTML: Used for structuring the content and creating the UI elements
+
 CSS: Used for styling and layout, including the attractive background image
+
 JavaScript: Used for handling user input, performing the temperature conversions, and updating the UI
